@@ -1,6 +1,4 @@
 provider "aws" {
-  access_key = ""
-  secret_key = ""
   region     = "us-east-1"
 }
 
@@ -61,32 +59,30 @@ output "aws_security_gr_id" {
 }
 
 ## Create Subnets ##
-resource "aws_subnet" "terraform-subnet_1" {
+resource "aws_subnet" "terraform-subnet" {
   vpc_id            = aws_vpc.terraform-vpc.id
   cidr_block        = "172.16.10.0/24"
   availability_zone = "us-east-1a"
 
   tags = {
-    Name = "terraform-subnet_1"
+    Name = "terraform-subnet"
   }
 }
 
-output "aws_subnet_subnet_1" {
-  value = aws_subnet.terraform-subnet_1.id
+output "aws_subnet_subnet" {
+  value = aws_subnet.terraform-subnet.id
 }
 
-resource "aws_instance" "terraform_wapp" {
-  ami                         = "ami-0ed9277fb7eb570c9"
+resource "aws_instance" "terra_test" {
+  ami                         = "ami-08c40ec9ead489470"
   instance_type               = "t2.micro"
   vpc_security_group_ids      = ["${aws_security_group.terraform_private_sg.id}"]
-  subnet_id                   = aws_subnet.terraform-subnet_1.id
+  subnet_id                   = aws_subnet.terraform-subnet.id
   count                       = 1
   associate_public_ip_address = true
   tags = {
-    Name        = "terraform_ec2_wapp_awsdev"
+    Name        = "terra_test"
     Environment = "development"
     Project     = "DEMO-TERRAFORM"
   }
 }
-
-output "instance_id_list" { value = ["${aws_instance.terraform_wapp.*.id}"] }
